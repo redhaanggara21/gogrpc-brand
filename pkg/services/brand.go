@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/redhaanggara21/go-grpc-brand-svc/pkg/db"
@@ -17,8 +16,8 @@ type Server struct {
 func (s *Server) CreateBrand(ctx context.Context, req *pb.CreateBrandRequest) (*pb.CreateBrandResponse, error) {
 	var brand models.Brand
 
-	brand.brand_name = req.BrandName
-	brand.created_date = req.CreatedDate
+	brand.Brand_name = ""
+	brand.Date_created = ""
 
 	if result := s.H.DB.Create(&brand); result.Error != nil {
 		return &pb.CreateBrandResponse{
@@ -27,8 +26,6 @@ func (s *Server) CreateBrand(ctx context.Context, req *pb.CreateBrandRequest) (*
 		}, nil
 	}
 
-	fmt.Println(&brand)
-
 	return &pb.CreateBrandResponse{
 		Status: http.StatusCreated,
 		Id:     brand.Id,
@@ -36,7 +33,7 @@ func (s *Server) CreateBrand(ctx context.Context, req *pb.CreateBrandRequest) (*
 }
 
 func (s *Server) FindOne(ctx context.Context, req *pb.FindOneRequest) (*pb.FindOneResponse, error) {
-	var brand models.brand
+	var brand models.Brand
 
 	if result := s.H.DB.First(&brand, req.Id); result.Error != nil {
 		return &pb.FindOneResponse{
@@ -46,9 +43,9 @@ func (s *Server) FindOne(ctx context.Context, req *pb.FindOneRequest) (*pb.FindO
 	}
 
 	data := &pb.FindOneData{
-		Id:           brand.Id,
-		Name_brand:   brand.Name,
-		Date_created: brand.Date_created,
+		Id:          brand.Id,
+		BrandName:   brand.Brand_name,
+		DateCreated: brand.Date_created,
 	}
 
 	return &pb.FindOneResponse{
