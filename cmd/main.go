@@ -35,6 +35,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
+	// fmt.Print(&s)
+
 	pb.RegisterBrandServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {

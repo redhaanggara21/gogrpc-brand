@@ -15,9 +15,8 @@ type Server struct {
 
 func (s *Server) CreateBrand(ctx context.Context, req *pb.CreateBrandRequest) (*pb.CreateBrandResponse, error) {
 	var brand models.Brand
-
-	brand.Brand_name = ""
-	brand.Date_created = ""
+	brand.Brand_name = req.BrandName
+	brand.Date_created = req.DateCreated
 
 	if result := s.H.DB.Create(&brand); result.Error != nil {
 		return &pb.CreateBrandResponse{
@@ -25,6 +24,13 @@ func (s *Server) CreateBrand(ctx context.Context, req *pb.CreateBrandRequest) (*
 			Error:  result.Error.Error(),
 		}, nil
 	}
+
+	// fmt.Print(
+	// 	&pb.CreateBrandResponse{
+	// 		Status: http.StatusCreated,
+	// 		Id:     1,
+	// 	}
+	// )
 
 	return &pb.CreateBrandResponse{
 		Status: http.StatusCreated,
